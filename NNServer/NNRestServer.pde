@@ -1,5 +1,14 @@
 import processing.net.*;
 
+String decodeURL (String input) {
+	try {
+		return new String(input.getBytes("UTF-8"), "ASCII");
+	} catch (Exception e) {
+		e.printStackTrace();
+	}
+	return null;
+}
+
 class NNRestServer {
 	private int port;
 	private Server server;
@@ -11,16 +20,16 @@ class NNRestServer {
 	public NNRestServer (PApplet parent, int port) {
 		this.port = port;
 		this.server = new Server(parent, port);
-		this.handlersAll = new ArrayList();
-		this.handlersAllSpecific = new ArrayList();
-		this.handlersGet = new ArrayList();
-		this.handlersPost
+		this.handlersAll = new NNURLHandlerList();
+		this.handlersBegins = new NNURLBeginsHandlerList();
+		this.handlersGet = new NNURLHandlerList();
+		this.handlersPost = new NNURLHandlerList();
 	}
 
 	public void accept () {
 		Client client = this.server.available();
 		if (client != null) {
-			this.prepareRequest(new NNRestActivity(this.server, client));
+			this.workActivity(new NNRestActivity(this.server, client));
 		}
 	}
 
@@ -32,12 +41,12 @@ class NNRestServer {
 		this.handlersBegins.handle(activity);
 		if(!activity.shouldStart()) return;
 		activity.start();
-		if(activity.method.equals("GET")){
+		if(activity.request.method.equals("GET")){
 			this.handlersGet.handle(activity);
 			return;
 		}
-		if(activity.method.equals("POST")){
-			this.handlersPOST.handle(activity);
+		if(activity.request.method.equals("POST")){
+			this.handlersPost.handle(activity);
 			return;
 		}
 		activity.response.notFound();
@@ -59,15 +68,6 @@ class NNRestServer {
 	public void use(String urlPattern, NNActivityHandler handler) {
 		this.handlersAll.add(urlPattern, handler);
 	}
-
-	public static String urlDecode (String input) {
-		try {
-			return new String(input.getBytes("UTF-8"), "ASCII"));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
 }
 
 interface NNActivityHandler {
@@ -86,7 +86,7 @@ class NNURLHandlerList {
 		for(int i = 0; i < handlersSize; i += 2){
 			String pattern = (String)(this.handlers.get(i));
 			String regex = ("\\Q" + pattern + "\\E").replace("*", "\\E.*\\Q");
-			if(activity.reqest.path.match(regex)){
+			if(activity.request.path.matches(regex)){
 				NNActivityHandler handler = (NNActivityHandler)(this.handlers.get(i+1));
 				this.matched(activity, pattern, handler);
 				return true;
@@ -101,7 +101,7 @@ class NNURLHandlerList {
 		ArrayList params = new ArrayList();
 		for(int c = 0; c < patternComponents.length; c++){
 			if(patternComponents[c].equals("*")){
-				params.add(NNServer.urlDecode(urlComponents[c]));
+				params.add(decodeURL(urlComponents[c]));
 			}
 		}
 		handler.onActivity(activity, params);
@@ -116,7 +116,7 @@ class NNURLHandlerList {
 class NNURLBeginsHandlerList {
 	private ArrayList handlers;
 
-	public NNURLHandlerList () {
+	public NNURLBeginsHandlerList () {
 		this.handlers = new ArrayList();
 	}
 
@@ -124,7 +124,7 @@ class NNURLBeginsHandlerList {
 		int handlersSize = this.handlers.size();
 		for(int i = 0; i < handlersSize; i += 2){
 			String pattern = (String)(this.handlers.get(i));
-			if(activity.reqest.path.startsWith(pattern)){
+			if(activity.request.path.startsWith(pattern)){
 				NNActivityHandler handler = (NNActivityHandler)(this.handlers.get(i+1));
 				handler.onActivity(activity, new ArrayList());
 			}
@@ -153,11 +153,11 @@ class NNRestActivity {
 	}
 
 	public void start () {
-		this.next = false;
+		this.next = true;
 	}
 
-	public void next () {
-		this.next = true;
+	public void quit () {
+		this.next = false;
 	}
 
 	public boolean shouldStart () {
@@ -168,17 +168,30 @@ class NNRestActivity {
 class NNRestRequest {
 	public String method;
 	public String path;
+	public HashMap<String, String> getParams;
 
 	public NNRestRequest (String requestHeaders) {
 		String[] lines = requestHeaders.split("\n");
-		lines
+		String[] requestLineComponents = lines[0].split(" ");
+		this.method = requestLineComponents[0];
+		String requestURI = requestLineComponents[1];
+		String[] requestURIComponents = requestURI.split("\\?");
+		this.path = requestURIComponents[0];
+		this.getParams = new HashMap<String, String>();
+		if(requestURIComponents.length > 1){
+			String[] getParamsComponents = requestURIComponents[1].split("&");
+			for(int i = 0; i < getParamsComponents.length; i++){
+				String[] getParamPair = getParamsComponents[i].split("=");
+				this.getParams.put(getParamPair[0], decodeURL(getParamPair[1]));
+			}
+		}
 	}
 }
 
 class NNRestResponse {
 	Client client;
 
-	public NNResponse (Client client) {
+	public NNRestResponse (Client client) {
 		this.client = client;
 	}
 
@@ -190,19 +203,26 @@ class NNRestResponse {
 	}
 
 	public void statusOK () {
-		this.writeLine("HTTP/1.0 200 OK")
+		this.writeLine("HTTP/1.0 200 OK");
 	}
 
 	public void statusInternalError () {
-		this.writeLine("HTTP/1.0 500 Internal Server Error")
+		this.writeLine("HTTP/1.0 500 Internal Server Error");
 	}
 
 	public void statusBadRequest () {
-		this.writeLine("HTTP/1.0 400 Bad Request")
+		this.writeLine("HTTP/1.0 400 Bad Request");
 	}
 
 	public void notFound () {
-		this.writeLine("HTTP/1.0 404 Not Found")
+		this.statusNotFound();
+		this.contentType("text/json");
+		this.writeBody("{\"status\":\"notfound\"}");
+		this.end();
+	}
+
+	public void statusNotFound () {
+		this.writeLine("HTTP/1.0 404 Not Found");
 	}
 
 	public void contentType (String mimeType) {

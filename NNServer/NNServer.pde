@@ -6,12 +6,16 @@ NNDatabase db;
 void setup() {
 	db = new NNDatabase("database");
 	restfulServer = new NNRestServer(this, 8080);
-	restfulServer.get("/", new NNActivityHanlder{
+
+	restfulServer.get("/", new NNActivityHandler(){
 		@Override
 		public void onActivity (NNRestActivity activity, ArrayList params) {
 			activity.response.json();
+			activity.quit();
 		}
 	});
+
+	
 }
 
 void draw() {
