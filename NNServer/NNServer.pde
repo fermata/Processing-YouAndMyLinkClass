@@ -21,6 +21,27 @@ void setup() {
 			activity.quit();
 		}
 	});
+
+	restfulServer.get("/class/*", new NNActivityHandler(){
+		@Override
+		public void onActivity (NNRestActivity activity, ArrayList params) {
+			NNRow fetched = db.table("class").findOne(":id == " + params.get(0));
+			NNDictionary dictionary = new NNDictionary();
+			if(fetched != null){
+				dictionary.put("result").set("success");
+				NNDictionary subDictionary = new NNDictionary();
+				subDictionary.put("id").set(fetched.column("id").integerValue());
+				subDictionary.put("code").set(fetched.column("code").stringValue());
+				subDictionary.put("name").set(fetched.column("name").stringValue());
+				subDictionary.put("professor").set(fetched.column("professor").stringValue());
+				dictionary.put("class").set(subDictionary);
+			}else{
+				dictionary.put("result").set("notfound");
+			}
+			activity.response.json(dictionary);
+			activity.quit();
+		}
+	});
 }
 
 void draw() {
