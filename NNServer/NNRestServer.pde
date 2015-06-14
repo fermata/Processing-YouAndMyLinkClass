@@ -16,6 +16,8 @@ class NNRestServer {
 	private NNURLBeginsHandlerList handlersBegins;
 	private NNURLHandlerList handlersGet;
 	private NNURLHandlerList handlersPost;
+	private NNURLHandlerList handlersPut;
+	private NNURLHandlerList handlersDelete;
 
 	public NNRestServer (PApplet parent, int port) {
 		this.port = port;
@@ -49,6 +51,14 @@ class NNRestServer {
 			this.handlersPost.handle(activity);
 			return;
 		}
+		if(activity.request.method.equals("PUT")){
+			this.handlersPut.handle(activity);
+			return;
+		}
+		if(activity.request.method.equals("DELETE")){
+			this.handlersDelete.handle(activity);
+			return;
+		}
 		activity.response.notFound();
 		return;
 	}
@@ -59,6 +69,14 @@ class NNRestServer {
 
 	public void post(String urlPattern, NNActivityHandler handler) {
 		this.handlersPost.add(urlPattern, handler);
+	}
+
+	public void put(String urlPattern, NNActivityHandler handler) {
+		this.handlersPut.add(urlPattern, handler);
+	}
+
+	public void delete(String urlPattern, NNActivityHandler handler) {
+		this.handlersDelete.add(urlPattern, handler);
 	}
 
 	public void begins(String url, NNActivityHandler handler) {

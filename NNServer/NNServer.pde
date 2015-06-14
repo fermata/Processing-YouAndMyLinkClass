@@ -1,5 +1,3 @@
-import processing.net.*;
-
 NNRestServer restfulServer;
 NNDatabase db;
 
