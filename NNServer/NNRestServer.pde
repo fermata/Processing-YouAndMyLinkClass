@@ -195,10 +195,10 @@ class NNRestResponse {
 		this.client = client;
 	}
 
-	public void json () {
+	public void json (NNDictionary dictionary) {
 		this.statusOK();
 		this.contentType("text/json");
-		this.writeBody("{\"status\":\"success\"}");
+		this.writeBody(dictionary.serialize());
 		this.end();
 	}
 

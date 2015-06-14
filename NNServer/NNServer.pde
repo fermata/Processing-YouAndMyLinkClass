@@ -10,12 +10,17 @@ void setup() {
 	restfulServer.get("/", new NNActivityHandler(){
 		@Override
 		public void onActivity (NNRestActivity activity, ArrayList params) {
-			activity.response.json();
+			NNDictionary dictionary = new NNDictionary();
+			dictionary.put("test").set("하하하하");
+			dictionary.put("value").set("ahaaha");
+			NNDictionary subDictionary = new NNDictionary();
+			subDictionary.put("another").set(1523);
+			subDictionary.put("value").set(false);
+			dictionary.put("subDictionary").set(subDictionary);
+			activity.response.json(dictionary);
 			activity.quit();
 		}
 	});
-
-	
 }
 
 void draw() {
