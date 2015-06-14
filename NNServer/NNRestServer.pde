@@ -220,6 +220,20 @@ class NNRestResponse {
 		this.end();
 	}
 
+	public void plain (String content) {
+		this.statusOK();
+		this.contentType("text/plain");
+		this.writeBody(content);
+		this.end();
+	}
+
+	public void html (String content) {
+		this.statusOK();
+		this.contentType("text/html");
+		this.writeBody(content);
+		this.end();
+	}
+
 	public void statusOK () {
 		this.writeLine("HTTP/1.0 200 OK");
 	}
