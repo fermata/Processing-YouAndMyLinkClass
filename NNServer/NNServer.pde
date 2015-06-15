@@ -2,19 +2,26 @@ NNRestServer restfulServer;
 NNDatabase db;
 
 void setup() {
+	frameRate(300);
+
 	db = new NNDatabase("database");
 	restfulServer = new NNRestServer(this, 8080);
 
-	restfulServer.get("/", new NNActivityHandler(){
+	restfulServer.get("/class", new NNActivityHandler(){
 		@Override
 		public void onActivity (NNRestActivity activity, ArrayList params) {
+			ArrayList fetched = db.table("class").find();
 			NNDictionary dictionary = new NNDictionary();
-			dictionary.put("test").set("하하하하");
-			dictionary.put("value").set("ahaaha");
-			NNDictionary subDictionary = new NNDictionary();
-			subDictionary.put("another").set(1523);
-			subDictionary.put("value").set(false);
-			dictionary.put("subDictionary").set(subDictionary);
+			if(fetched != null){
+				dictionary.put("success").set(true);
+				dictionary.put("status").set("OK");
+				NNArray dbResults = new NNArray();
+				dbResults.withRows(fetched);
+				dictionary.put("classes").set(dbResults);
+			}else{
+				dictionary.put("success").set(false);
+				dictionary.put("status").set("NOT_FOUND");
+			}
 			activity.response.json(dictionary);
 			activity.quit();
 		}
@@ -23,41 +30,23 @@ void setup() {
 	restfulServer.get("/class/*", new NNActivityHandler(){
 		@Override
 		public void onActivity (NNRestActivity activity, ArrayList params) {
-			NNRow fetched = db.table("class").findOne(":id == " + params.get(0));
+			NNRow fetched = db.table("class").findOne(":code == '" + params.get(0) + "'");
 			NNDictionary dictionary = new NNDictionary();
 			if(fetched != null){
-				dictionary.put("result").set("success");
+				dictionary.put("success").set(true);
+				dictionary.put("status").set("OK");
 				NNDictionary subDictionary = new NNDictionary();
-				subDictionary.put("id").set(fetched.column("id").integerValue());
-				subDictionary.put("code").set(fetched.column("code").stringValue());
-				subDictionary.put("name").set(fetched.column("name").stringValue());
-				subDictionary.put("professor").set(fetched.column("professor").stringValue());
+				subDictionary.withRow(fetched);
 				dictionary.put("class").set(subDictionary);
 			}else{
-				dictionary.put("result").set("notfound");
+				dictionary.put("success").set(false);
+				dictionary.put("status").set("NOT_FOUND");
 			}
 			activity.response.json(dictionary);
 			activity.quit();
 		}
 	});
 
-	restfulServer.get("/class", new NNActivityHandler(){
-		@Override
-		public void onActivity (NNRestActivity activity, ArrayList params) {
-			ArrayList fetched = db.table("class").find();
-			NNDictionary dictionary = new NNDictionary();
-			if(fetched != null){
-				dictionary.put("result").set("success");
-				NNArray dbResults = new NNArray();
-				dbResults.withRows(fetched);
-				dictionary.put("class").set(dbResults);
-			}else{
-				dictionary.put("result").set("notfound");
-			}
-			activity.response.json(dictionary);
-			activity.quit();
-		}
-	});
 }
 
 void draw() {

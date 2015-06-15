@@ -45,20 +45,17 @@ class NNRestServer {
 		activity.start();
 		if(activity.request.method.equals("GET")){
 			this.handlersGet.handle(activity);
-			return;
 		}
 		if(activity.request.method.equals("POST")){
 			this.handlersPost.handle(activity);
-			return;
 		}
 		if(activity.request.method.equals("PUT")){
 			this.handlersPut.handle(activity);
-			return;
 		}
 		if(activity.request.method.equals("DELETE")){
 			this.handlersDelete.handle(activity);
-			return;
 		}
+		if(!activity.shouldStart()) return;
 		activity.response.notFound();
 		return;
 	}
@@ -190,6 +187,7 @@ class NNRestRequest {
 
 	public NNRestRequest (String requestHeaders) {
 		String[] lines = requestHeaders.split("\n");
+		println(lines[0]);
 		String[] requestLineComponents = lines[0].split(" ");
 		this.method = requestLineComponents[0];
 		String requestURI = requestLineComponents[1];
@@ -249,7 +247,7 @@ class NNRestResponse {
 	public void notFound () {
 		this.statusNotFound();
 		this.contentType("text/json");
-		this.writeBody("{\"status\":\"notfound\"}");
+		this.writeBody("{\"success\":false,\"status\":\"REQUEST_HANDLER_NOT_DEFINED\"}");
 		this.end();
 	}
 
