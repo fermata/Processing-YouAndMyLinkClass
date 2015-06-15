@@ -29,6 +29,7 @@ class NNDatabase {
 }
 
 class NNTableSchema {
+	public String[] dataTypes;
 	public String[] dataNames;
 	public String[] dataOptions;
 	private int pkIndex;
@@ -42,12 +43,14 @@ class NNTableSchema {
 		this.tableName = tableName;
 		String[] schemaInfo = loadStrings(database.databasePath + tableName + ".schema");
 		this.count = schemaInfo.length;
+		this.dataTypes = new String[this.count];
 		this.dataNames = new String[this.count];
 		this.dataOptions = new String[this.count];
 		for(int i = 0; i < this.count; i++){
 			String[] datas = schemaInfo[i].split(" ");
-			this.dataNames[i] = datas[0];
-			this.dataOptions[i] = datas[1];
+			this.dataTypes[i] = datas[0];
+			this.dataNames[i] = datas[1];
+			this.dataOptions[i] = datas[2];
 			if(this.dataOptions[i].equals("PK")){
 				this.pkIndex = i;
 				this.pkValue = Integer.valueOf(loadStrings(database.databasePath + this.tableName + "_" + this.dataNames[i] + "_last.value")[0]);
@@ -89,6 +92,10 @@ class NNRow {
 			this.row.add(new NNValue(""));
 		}
 		this.row.set(this.schema.pkIndex, new NNValue("" + this.schema.nextPK()));
+	}
+
+	public NNValue column (int columnId) {
+		return (NNValue)(this.row.get(columnId));
 	}
 
 	public NNValue column (String column) {
@@ -188,6 +195,10 @@ class NNTable {
 
 	public int length () {
 		return data.size() / this.schema.count;
+	}
+
+	public ArrayList find () {
+		return this.find("true");
 	}
 
 	public ArrayList find (String condition) {

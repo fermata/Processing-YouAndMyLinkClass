@@ -1,4 +1,4 @@
-id PK
-code NN
-name NN
-professor NN
+int id PK
+String code NN
+String name NN
+String professor NN

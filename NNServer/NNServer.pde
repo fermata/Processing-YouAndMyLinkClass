@@ -40,6 +40,24 @@ void setup() {
 			activity.quit();
 		}
 	});
+
+	restfulServer.get("/class", new NNActivityHandler(){
+		@Override
+		public void onActivity (NNRestActivity activity, ArrayList params) {
+			ArrayList fetched = db.table("class").find();
+			NNDictionary dictionary = new NNDictionary();
+			if(fetched != null){
+				dictionary.put("result").set("success");
+				NNArray dbResults = new NNArray();
+				dbResults.withRows(fetched);
+				dictionary.put("class").set(dbResults);
+			}else{
+				dictionary.put("result").set("notfound");
+			}
+			activity.response.json(dictionary);
+			activity.quit();
+		}
+	});
 }
 
 void draw() {

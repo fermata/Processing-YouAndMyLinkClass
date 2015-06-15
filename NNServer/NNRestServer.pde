@@ -258,7 +258,7 @@ class NNRestResponse {
 	}
 
 	public void contentType (String mimeType) {
-		this.writeLine("Content-Type: " + mimeType);
+		this.writeLine("Content-Type: " + mimeType + "; charset=utf-8");
 	}
 
 	public void write (String content) {
