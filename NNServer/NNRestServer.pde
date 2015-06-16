@@ -158,6 +158,7 @@ class NNRestActivity {
 	private Server server;
 	private Client client;
 	private boolean next;
+	public NNDictionary storage;
 
 	public NNRestActivity (Server server, Client client) {
 		this.server = server;
@@ -165,6 +166,7 @@ class NNRestActivity {
 		this.request = new NNRestRequest(client.readString());
 		this.response = new NNRestResponse(client);
 		this.next = true;
+		this.storage = new NNDictionary();
 	}
 
 	public void start () {
@@ -184,6 +186,7 @@ class NNRestRequest {
 	public String method;
 	public String path;
 	public HashMap<String, String> getParams;
+	public NNDictionary requestBody;
 
 	public NNRestRequest (String requestHeaders) {
 		String[] lines = requestHeaders.split("\n");

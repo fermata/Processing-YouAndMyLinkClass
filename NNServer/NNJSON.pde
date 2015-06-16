@@ -38,6 +38,14 @@ class NNArray {
 		serialized.append("]");
 		return serialized.toString();
 	}
+
+	public void each (NNArrayIterator iterator) {
+		int dataListSize = this.dataList.size();
+		for(int i = 0; i < dataListSize; i++){
+			NNDynamicValue value = (NNDynamicValue)(this.dataList.get(i));
+			iterator.iterate(i, value);
+		}
+	}
 }
 
 class NNDictionary {
@@ -51,9 +59,9 @@ class NNDictionary {
 		NNTableSchema schema = row.schema;
 		for(int i = 0; i < schema.dataNames.length; i++){
 			if(schema.dataTypes[i].equals("String")){
-				this.put(schema.dataNames[i]).set(row.column(i).stringValue());
+				this.key(schema.dataNames[i]).set(row.column(i).stringValue());
 			}else if(schema.dataTypes[i].equals("int")){
-				this.put(schema.dataNames[i]).set(row.column(i).integerValue());
+				this.key(schema.dataNames[i]).set(row.column(i).integerValue());
 			}
 		}
 	}
@@ -69,7 +77,7 @@ class NNDictionary {
 		return -1;
 	}
 
-	public NNDynamicValue put (String key) {
+	public NNDynamicValue key (String key) {
 		int keyPosition = this.position(key);
 		if(keyPosition != -1){
 			return ((NNKeyValue)(this.dataList.get(keyPosition))).value();
@@ -100,6 +108,14 @@ class NNDictionary {
 		}
 		serialized.append("}");
 		return serialized.toString();
+	}
+
+	public void each (NNArrayIterator iterator) {
+		int dataListSize = this.dataList.size();
+		for(int i = 0; i < dataListSize; i++){
+			NNKeyValue keyValue = (NNKeyValue)(this.dataList.get(i));
+			iterator.iterate(keyValue.key(), keyValue.value());
+		}
 	}
 }
 
@@ -137,6 +153,16 @@ class NNKeyValue {
 		this.setValue(value);
 	}
 
+	public NNKeyValue (String keyString, NNDictionary value) {
+		this.keyString = keyString;
+		this.setValue(value);
+	}
+
+	public NNKeyValue (String keyString, NNArray value) {
+		this.keyString = keyString;
+		this.setValue(value);
+	}
+
 	public void setValue (int value) {
 		this.value = new NNDynamicValue(value);
 	}
@@ -150,6 +176,14 @@ class NNKeyValue {
 	}
 
 	public void setValue (float value) {
+		this.value = new NNDynamicValue(value);
+	}
+
+	public void setValue (NNDictionary value) {
+		this.value = new NNDynamicValue(value);
+	}
+
+	public void setValue (NNArray value) {
 		this.value = new NNDynamicValue(value);
 	}
 
@@ -229,6 +263,34 @@ class NNDynamicValue {
 		return this.value;
 	}
 
+	public String stringValue () {
+		return (String)(this.value);
+	}
+
+	public int integerValue () {
+		return (Integer)(this.value);
+	}
+
+	public float floatValue () {
+		return (Float)(this.value);
+	}
+
+	public boolean booleanValue () {
+		return (Boolean)(this.value);
+	}
+
+	public NNDictionary dictionaryValue () {
+		return (NNDictionary)(this.value);
+	}
+
+	public NNArray arrayValue () {
+		return (NNArray)(this.value);
+	}
+
+	public boolean isInstanceOf (Class c) {
+		return (this.value instanceof c);
+	}
+
 	public String serialize () {
 		switch(this.type){
 			case 1: return "\"" + ((String)(this.value)).replaceAll("\"", "\\\"") + "\"";
@@ -240,4 +302,12 @@ class NNDynamicValue {
 		}
 		return "";
 	}
+}
+
+interface NNDictonaryIterator {
+	public void iterate (String key, NNDynamicValue value);
+}
+
+interface NNArrayIterator {
+	public void iterate (int index, NNDynamicValue value);
 }
