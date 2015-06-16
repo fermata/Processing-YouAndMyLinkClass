@@ -1,4 +1,21 @@
 import processing.net.*;
+import java.security.*;
+
+String md5 (String message) {
+	try {
+		MessageDigest md = MessageDigest.getInstance("SHA-256");
+		md.update(message.getBytes());
+		byte[] byteData = md.digest();
+		StringBuffer sb = new StringBuffer(); 
+		for(int i = 0 ; i < byteData.length ; i++){
+			sb.append(Integer.toString((byteData[i]&0xff) + 0x100, 16).substring(1));
+		}
+		return sb.toString();
+	} catch (Exception e) {
+		e.printStackTrace();
+		return null;
+	}
+}
 
 String decodeURL (String input) {
 	try {
@@ -186,9 +203,10 @@ class NNRestRequest {
 	public String method;
 	public String path;
 	public HashMap<String, String> getParams;
-	public NNDictionary requestBody;
+	public NNDictionary body;
 
 	public NNRestRequest (String requestHeaders) {
+		this.body = new NNDictionary();
 		String[] lines = requestHeaders.split("\n");
 		println(lines[0]);
 		String[] requestLineComponents = lines[0].split(" ");
@@ -202,6 +220,22 @@ class NNRestRequest {
 			for(int i = 0; i < getParamsComponents.length; i++){
 				String[] getParamPair = getParamsComponents[i].split("=");
 				this.getParams.put(getParamPair[0], decodeURL(getParamPair[1]));
+			}
+		}
+		int bodyStart = -1;
+		for(int i = 0; i < lines.length; i++){
+			if(lines[i].equals("\r")){
+				bodyStart = i + 1;
+				break;
+			}
+		}
+		if(bodyStart != -1){
+			for(int i = bodyStart; i < lines.length; i++){
+				String[] components = lines[i].replaceAll("\r","").split("&");
+				for(int j = 0; j < components.length; j++){
+					String[] keyValue = components[j].split("=");
+					this.body.key(keyValue[0]).set(decodeURL(keyValue[1]));
+				}
 			}
 		}
 	}

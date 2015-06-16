@@ -24,6 +24,10 @@ class NNArray {
 		return (NNDynamicValue)(this.dataList.get(index));
 	}
 
+	public void remove (int index) {
+		this.dataList.remove(index);
+	}
+
 	public String serialize () {
 		int dataListSize = this.dataList.size();
 		StringBuffer serialized = new StringBuffer();
@@ -92,6 +96,10 @@ class NNDictionary {
 		return ((NNKeyValue)(this.dataList.get(this.position(key)))).value();
 	}
 
+	public void remove (String key) {
+		this.dataList.remove(this.position(key));
+	}
+
 	public String serialize () {
 		int dataListSize = this.dataList.size();
 		StringBuffer serialized = new StringBuffer();
@@ -110,7 +118,7 @@ class NNDictionary {
 		return serialized.toString();
 	}
 
-	public void each (NNArrayIterator iterator) {
+	public void each (NNDictionaryIterator iterator) {
 		int dataListSize = this.dataList.size();
 		for(int i = 0; i < dataListSize; i++){
 			NNKeyValue keyValue = (NNKeyValue)(this.dataList.get(i));
@@ -229,6 +237,10 @@ class NNDynamicValue {
 		this.set(dictionaryValue);
 	}
 
+	public NNDynamicValue (NNArray arrayValue) {
+		this.set(arrayValue);
+	}
+
 	public void set (String stringValue) {
 		this.type = 1;
 		this.value = stringValue;
@@ -287,10 +299,6 @@ class NNDynamicValue {
 		return (NNArray)(this.value);
 	}
 
-	public boolean isInstanceOf (Class c) {
-		return (this.value instanceof c);
-	}
-
 	public String serialize () {
 		switch(this.type){
 			case 1: return "\"" + ((String)(this.value)).replaceAll("\"", "\\\"") + "\"";
@@ -304,7 +312,7 @@ class NNDynamicValue {
 	}
 }
 
-interface NNDictonaryIterator {
+interface NNDictionaryIterator {
 	public void iterate (String key, NNDynamicValue value);
 }
 
