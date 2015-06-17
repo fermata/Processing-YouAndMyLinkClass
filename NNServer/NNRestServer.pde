@@ -1,7 +1,7 @@
 import processing.net.*;
 import java.security.*;
 
-String md5 (String message) {
+String sha256 (String message) {
 	try {
 		MessageDigest md = MessageDigest.getInstance("SHA-256");
 		md.update(message.getBytes());
