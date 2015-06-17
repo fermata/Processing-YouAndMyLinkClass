@@ -126,7 +126,6 @@ void setup() {
 		public void onActivity (NNRestActivity activity, ArrayList params) {
 			if(activity.request.getParams.get("access_token") != null){
 				String accessToken = (String)(activity.request.getParams.get("access_token"));
-				println(accessToken);
 				int userId = decodeAccessToken(accessToken);
 				if(userId != -1){
 					activity.storage.key("userId").set(userId);
