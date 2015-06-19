@@ -52,6 +52,13 @@ class NNArray {
 	}
 
 	/**
+	 * 배열의 크기를 반환한다.
+	 */
+	public int size () {
+		return this.dataList.size();
+	}
+
+	/**
 	 * 자신(NNArray)를 JSON 형태로 직렬화한다. 하위 객체도 모두 JSON으로 직렬화 된다.
 	 * @return String JSON 문자열
 	 */

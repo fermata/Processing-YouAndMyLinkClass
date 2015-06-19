@@ -41,21 +41,21 @@ void setup() {
 			String passwordHash = sha256(body.key("password").stringValue());
 			String query = ":username == '" + username +  "' && :password == '" + passwordHash + "'";
 			NNRow user = db.table("users").findOne(query);
-			NNDictionary dictionary = new NNDictionary();
+			NNDictionary output = new NNDictionary();
 			if(user != null){
 				NNDictionary userinfo = new NNDictionary();
 				userinfo.withRow(user);
 				userinfo.remove("password");
 				String accessToken = makeAcessToken(username, user.column("id").integerValue());
-				dictionary.key("success").set(true);
-				dictionary.key("status").set("OK");
-				dictionary.key("user").set(userinfo);
-				dictionary.key("access_token").set(accessToken);
+				output.key("success").set(true);
+				output.key("status").set("OK");
+				output.key("user").set(userinfo);
+				output.key("access_token").set(accessToken);
 			}else{
-				dictionary.key("success").set(false);
-				dictionary.key("status").set("USER_NOT_FOUND_OR_INCORRECT_CREDENCIAL");
+				output.key("success").set(false);
+				output.key("status").set("USER_NOT_FOUND_OR_INCORRECT_CREDENCIAL");
 			}
-			activity.response.json(dictionary);
+			activity.response.json(output);
 			activity.quit();
 		}
 	});
@@ -69,14 +69,14 @@ void setup() {
 			row.setColumn("password", sha256(body.key("password").stringValue()));
 			db.table("users").insert(row);
 			db.table("users").save();
-			NNDictionary dictionary = new NNDictionary();
-			dictionary.key("success").set(true);
-			dictionary.key("status").set("USER_ADDED");
+			NNDictionary output = new NNDictionary();
+			output.key("success").set(true);
+			output.key("status").set("USER_ADDED");
 			NNDictionary userinfo = new NNDictionary();
 			userinfo.key("id").set(row.column("id").integerValue());
 			userinfo.key("username").set(body.key("username").stringValue());
-			dictionary.key("user").set(userinfo);
-			activity.response.json(dictionary);
+			output.key("user").set(userinfo);
+			activity.response.json(output);
 			activity.quit();
 		}
 	});
@@ -85,18 +85,18 @@ void setup() {
 		@Override
 		public void onActivity (NNRestActivity activity, ArrayList params) {
 			ArrayList fetched = db.table("class").find();
-			NNDictionary dictionary = new NNDictionary();
+			NNDictionary output = new NNDictionary();
 			if(fetched != null){
-				dictionary.key("success").set(true);
-				dictionary.key("status").set("OK");
+				output.key("success").set(true);
+				output.key("status").set("OK");
 				NNArray dbResults = new NNArray();
 				dbResults.withRows(fetched);
-				dictionary.key("classes").set(dbResults);
+				output.key("classes").set(dbResults);
 			}else{
-				dictionary.key("success").set(false);
-				dictionary.key("status").set("NOT_FOUND");
+				output.key("success").set(false);
+				output.key("status").set("NOT_FOUND");
 			}
-			activity.response.json(dictionary);
+			activity.response.json(output);
 			activity.quit();
 		}
 	});
@@ -105,18 +105,18 @@ void setup() {
 		@Override
 		public void onActivity (NNRestActivity activity, ArrayList params) {
 			NNRow fetched = db.table("class").findOne(":code == '" + params.get(0) + "'");
-			NNDictionary dictionary = new NNDictionary();
+			NNDictionary output = new NNDictionary();
 			if(fetched != null){
-				dictionary.key("success").set(true);
-				dictionary.key("status").set("OK");
+				output.key("success").set(true);
+				output.key("status").set("OK");
 				NNDictionary subDictionary = new NNDictionary();
 				subDictionary.withRow(fetched);
-				dictionary.key("class").set(subDictionary);
+				output.key("class").set(subDictionary);
 			}else{
-				dictionary.key("success").set(false);
-				dictionary.key("status").set("NOT_FOUND");
+				output.key("success").set(false);
+				output.key("status").set("NOT_FOUND");
 			}
-			activity.response.json(dictionary);
+			activity.response.json(output);
 			activity.quit();
 		}
 	});
@@ -132,10 +132,10 @@ void setup() {
 					return;
 				}
 			}
-			NNDictionary dictionary = new NNDictionary();
-			dictionary.key("success").set(false);
-			dictionary.key("status").set("ACCESS_TOKEN_NOT_PROVIDED_OR_TOKEN_INVALID");
-			activity.response.json(dictionary);
+			NNDictionary output = new NNDictionary();
+			output.key("success").set(false);
+			output.key("status").set("ACCESS_TOKEN_NOT_PROVIDED_OR_TOKEN_INVALID");
+			activity.response.json(output);
 			activity.quit();
 		}
 	});
@@ -145,19 +145,19 @@ void setup() {
 		public void onActivity (NNRestActivity activity, ArrayList params) {
 			String query = ":id == " + activity.storage.key("userId").integerValue();
 			NNRow user = db.table("users").findOne(query);
-			NNDictionary dictionary = new NNDictionary();
+			NNDictionary output = new NNDictionary();
 			if(user != null){
 				NNDictionary userinfo = new NNDictionary();
 				userinfo.withRow(user);
 				userinfo.remove("password");
-				dictionary.key("success").set(true);
-				dictionary.key("status").set("OK");
-				dictionary.key("user").set(userinfo);
+				output.key("success").set(true);
+				output.key("status").set("OK");
+				output.key("user").set(userinfo);
 			}else{
-				dictionary.key("success").set(false);
-				dictionary.key("status").set("USER_NOT_FOUND");
+				output.key("success").set(false);
+				output.key("status").set("USER_NOT_FOUND");
 			}
-			activity.response.json(dictionary);
+			activity.response.json(output);
 			activity.quit();
 		}
 	});
@@ -168,11 +168,11 @@ void setup() {
 			String query1 = ":user == " + activity.storage.key("userId").integerValue();
 			NNArray jjimList = new NNArray();
 			jjimList.withRows(db.table("jjim").find(query1));
-			NNDictionary dictionary = new NNDictionary();
-			dictionary.key("success").set(true);
-			dictionary.key("status").set("OK");
+			NNDictionary output = new NNDictionary();
+			output.key("success").set(true);
+			output.key("status").set("OK");
 			final NNArray jjims = new NNArray();
-			dictionary.key("jjims").set(jjims);
+			output.key("jjims").set(jjims);
 			jjimList.each(new NNArrayIterator(){
 				@Override
 				public void iterate (int index, NNDynamicValue value){
@@ -183,8 +183,77 @@ void setup() {
 					jjims.add().set(classInfo);
 				}
 			});
-			activity.response.json(dictionary);
+			activity.response.json(output);
 			activity.quit();
+		}
+	});
+
+	app.get("/me/jjim/*", new NNActivityHandler(){
+		NNRestActivity activity;
+		ArrayList params;
+		NNArray sharedClasses = new NNArray();
+
+		@Override
+		public void onActivity (NNRestActivity activity, ArrayList params) {
+			this.activity = activity;
+			this.params = params;
+			String otherUserQuery = ":username == '" + params.get(0) + "'";
+			NNRow otherUserRow = db.table("users").findOne(otherUserQuery);
+			if(otherUserRow == null){
+				this.userNotFound();
+			}else{
+				this.userFound(otherUserRow.column("id").integerValue());
+			}
+		}
+
+		private void userNotFound () {
+			NNDictionary output = new NNDictionary();
+			output.key("success").set(false);
+			output.key("status").set("USER_NOT_FOUND");
+			this.activity.response.json(output);
+			this.activity.quit();
+		}
+
+		private void userFound (int otherUserId) {
+			String myQuery = ":user == " + activity.storage.key("userId").integerValue();
+			String othersQuery = ":user == " + otherUserId;
+			NNArray myClasses = new NNArray();
+			NNArray othersClasses = new NNArray();
+			myClasses.withRows(db.table("jjim").find(myQuery));
+			othersClasses.withRows(db.table("jjim").find(othersQuery));
+			this.sharedClasses = new NNArray();
+			for(int o = 0; o < othersClasses.size(); o++){
+				NNDictionary othersClass = othersClasses.get(o).dictionaryValue();
+				int othersClassId = othersClass.key("class").integerValue();
+				boolean hasSameClass = false;
+				for(int m = 0; m < myClasses.size(); m++){
+					NNDictionary myClass = myClasses.get(m).dictionaryValue();
+					int myClassId = myClass.key("class").integerValue();
+					if(myClassId == othersClassId){
+						hasSameClass = true;
+						break;
+					}
+				}
+				this.addClass(othersClassId, hasSameClass);
+			}
+			this.sendOutput();
+		}
+
+		private void addClass (int classId, boolean shared) {
+			String query = ":id == " + classId;
+			NNDictionary classInfo = new NNDictionary();
+			classInfo.withRow(db.table("class").findOne(query));
+			classInfo.key("common").set(shared);
+			this.sharedClasses.add().set(classInfo);
+		}
+
+		private void sendOutput () {
+			NNDictionary output = new NNDictionary();
+			output.key("success").set(true);
+			output.key("status").set("OK");
+			output.key("classes").set(this.sharedClasses);
+			this.activity.response.json(output);
+			this.activity.quit();
 		}
 	});
 }
