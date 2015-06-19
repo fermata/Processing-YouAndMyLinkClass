@@ -14,7 +14,7 @@
 ```
 	POST /user/add
   
-	username=사용자아이디&password=비밀번호
+	username=<사용자아이디>&password=<비밀번호>
 ```
 #### 응답 예시
 ```json
@@ -35,7 +35,7 @@
 ```
 	POST /user/auth
 
-	username=사용자아이디&password=비밀번호
+	username=<사용자아이디>&password=<비밀번호>
 ```
 #### 응답 예시
 ```json
@@ -88,7 +88,7 @@
 ### 특정 수업 조회 (강의코드)
 #### 요청
 ```
-	GET /class/코드번호
+	GET /class/<강의 코드번호>
 ```
 #### 응답 예시
 ```json
@@ -110,7 +110,7 @@
 ### 현재 사용자의 정보 조회
 #### 요청
 ```
-	GET /me?access_token=토큰
+	GET /me?access_token=<토큰>
 ```
 #### 응답
 ```json
@@ -147,6 +147,37 @@
         "code": "0554",
         "name": "정보 통신 기초",
         "professor": "김민욱"
+      }
+    ]
+  }
+```
+
+### 다른 사용자의 찜 조회 (공통찜 여부 포함)
+#### 요청
+```
+  GET /me/jjim/<다른 사람 아이디>?access_token=토큰
+```
+#### 응답
+`classes`에는 타 유저의 찜 수업 목록이 들어간다. 각 수업에는 `common`필드가 있는데 이 필드의 값으로 나와 해당 사람의 공통찜 여부를 확인할 수 있다.
+아래와 같은 경우는 0362 수업은 회원 본인과 타 회원이 동시에 찜 한 수업이고, 0231은 타 사용자는 찜해두었지만 회원 본인은 찜하지 않은 수업이다.
+```json
+  {
+    "success": true,
+    "status": "OK",
+    "classes": [
+      {
+        "id": 1,
+        "code": "0362",
+        "name": "창의적 공학 설계",
+        "professor": "민덕기",
+        "common": true
+      },
+      {
+        "id": 4,
+        "code": "0231",
+        "name": "두번째 테스트 수업",
+        "professor": "최교수",
+        "common": false
       }
     ]
   }

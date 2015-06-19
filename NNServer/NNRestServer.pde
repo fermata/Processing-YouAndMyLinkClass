@@ -77,28 +77,33 @@ class NNRestServer {
 	 * 등록된 Hanlder들을 요청 종류에 따라 처리한다.
 	 */
 	private void workActivity (NNRestActivity activity) {
-		activity.start();
-		this.handlersAll.handle(activity);
-		if(!activity.shouldStart()) return;
-		activity.start();
-		this.handlersBegins.handle(activity);
-		if(!activity.shouldStart()) return;
-		activity.start();
-		if(activity.request.method.equals("GET")){
-			this.handlersGet.handle(activity);
+		try {
+			activity.start();
+			this.handlersAll.handle(activity);
+			if(!activity.shouldStart()) return;
+			activity.start();
+			this.handlersBegins.handle(activity);
+			if(!activity.shouldStart()) return;
+			activity.start();
+			if(activity.request.method.equals("GET")){
+				this.handlersGet.handle(activity);
+			}
+			if(activity.request.method.equals("POST")){
+				this.handlersPost.handle(activity);
+			}
+			if(activity.request.method.equals("PUT")){
+				this.handlersPut.handle(activity);
+			}
+			if(activity.request.method.equals("DELETE")){
+				this.handlersDelete.handle(activity);
+			}
+			if(!activity.shouldStart()) return;
+			activity.response.notFound();
+			return;
+		} catch (Exception e) {
+			activity.response.internalError();
+			return;
 		}
-		if(activity.request.method.equals("POST")){
-			this.handlersPost.handle(activity);
-		}
-		if(activity.request.method.equals("PUT")){
-			this.handlersPut.handle(activity);
-		}
-		if(activity.request.method.equals("DELETE")){
-			this.handlersDelete.handle(activity);
-		}
-		if(!activity.shouldStart()) return;
-		activity.response.notFound();
-		return;
 	}
 
 	/**
@@ -334,6 +339,13 @@ class NNRestResponse {
 
 	public void statusOK () {
 		this.writeLine("HTTP/1.0 200 OK");
+	}
+
+	public void internalError () {
+		this.statusInternalError();
+		this.contentType("text/json");
+		this.writeBody("{\"success\":false,\"status\":\"UNKNOWN_ERROR\"}");
+		this.end();
 	}
 
 	public void statusInternalError () {
