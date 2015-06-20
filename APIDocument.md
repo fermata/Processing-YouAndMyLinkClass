@@ -182,3 +182,35 @@
     ]
   }
 ```
+
+### 찜목록에 추가
+#### 요청
+```
+  POST /me/jjim?access_token=토큰
+
+  class=<강의 코드번호>
+```
+#### 응답
+강의 코드에 대한 수업을 찾을 수 없으면 `status`에 `CLASS_NOT_FOUND`를 반환한다.
+이미 찜이 되어있는 수업은 `ALREADY_ADDED_TO_JJIMS`를 반환한다.
+```json
+  {
+    "success": true,
+    "status": "JJIM_ADDED"
+  }
+```
+
+### 찜목록에서 삭제
+#### 요청
+```
+  DELETE /me/jjim/<강의 코드번호>?access_token=토큰
+```
+#### 응답
+강의 코드에 대한 수업을 찾을 수 없으면 `status`에 `CLASS_NOT_FOUND`를 반환한다.
+찜이 이미 취소된 수업이거나 찜이 안된 수업은 `JJIM_NOT_FOUND`를 반환한다.
+```json
+  {
+    "success": true,
+    "status": "JJIM_REMOVED"
+  }
+```
