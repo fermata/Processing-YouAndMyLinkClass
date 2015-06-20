@@ -320,9 +320,11 @@ class NNRestRequest {
  */
 class NNRestResponse {
 	Client client;
+	StringBuffer buffer;
 
 	public NNRestResponse (Client client) {
 		this.client = client;
+		this.buffer = new StringBuffer();
 	}
 
 	public void json (NNDictionary dictionary) {
@@ -381,7 +383,7 @@ class NNRestResponse {
 	}
 
 	public void write (String content) {
-		this.client.write(content);
+		this.buffer.append(content);
 	}
 
 	public void writeLine (String content) {
@@ -393,6 +395,7 @@ class NNRestResponse {
 	}
 
 	public void end () {
+		this.client.write(this.buffer.toString());
 		this.client.stop();
 	}
 }
