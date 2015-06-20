@@ -152,10 +152,56 @@
   }
 ```
 
+### 찜여부 확인
+#### 요청
+```
+  GET /me/jjim/<강의 코드번호>?access_token=토큰
+```
+#### 응답
+강의 코드에 대한 수업을 찾을 수 없으면 `status`에 `CLASS_NOT_FOUND`를 반환한다.
+해당 수업을 찜 한 경우 `jjimed`에 `true`를 반환하며, 아닌 경우 `false`를 반환한다.
+```json
+  {
+    "success": true,
+    "status": "OK",
+    "jjimed": true
+  }
+```
+
+### 찜목록에 추가
+#### 요청
+```
+  POST /me/jjim/<강의 코드번호>?access_token=토큰
+```
+#### 응답
+강의 코드에 대한 수업을 찾을 수 없으면 `status`에 `CLASS_NOT_FOUND`를 반환한다.
+이미 찜이 되어있는 수업은 `ALREADY_ADDED_TO_JJIMS`를 반환한다.
+```json
+  {
+    "success": true,
+    "status": "JJIM_ADDED"
+  }
+```
+
+### 찜목록에서 삭제
+#### 요청
+```
+  DELETE /me/jjim/<강의 코드번호>?access_token=토큰
+```
+#### 응답
+강의 코드에 대한 수업을 찾을 수 없으면 `status`에 `CLASS_NOT_FOUND`를 반환한다.
+찜이 이미 취소된 수업이거나 찜이 안된 수업은 `JJIM_NOT_FOUND`를 반환한다.
+```json
+  {
+    "success": true,
+    "status": "JJIM_REMOVED"
+  }
+```
+
 ### 다른 사용자의 찜 조회 (공통찜 여부 포함)
 #### 요청
 ```
-  GET /me/jjim/<다른 사람 아이디>?access_token=토큰
+  GET /me/jjim/other/<다른 사람 아이디>?access_token=토큰
 ```
 #### 응답
 `classes`에는 타 유저의 찜 수업 목록이 들어간다. 각 수업에는 `common`필드가 있는데 이 필드의 값으로 나와 해당 사람의 공통찜 여부를 확인할 수 있다.
@@ -180,37 +226,5 @@
         "common": false
       }
     ]
-  }
-```
-
-### 찜목록에 추가
-#### 요청
-```
-  POST /me/jjim?access_token=토큰
-
-  class=<강의 코드번호>
-```
-#### 응답
-강의 코드에 대한 수업을 찾을 수 없으면 `status`에 `CLASS_NOT_FOUND`를 반환한다.
-이미 찜이 되어있는 수업은 `ALREADY_ADDED_TO_JJIMS`를 반환한다.
-```json
-  {
-    "success": true,
-    "status": "JJIM_ADDED"
-  }
-```
-
-### 찜목록에서 삭제
-#### 요청
-```
-  DELETE /me/jjim/<강의 코드번호>?access_token=토큰
-```
-#### 응답
-강의 코드에 대한 수업을 찾을 수 없으면 `status`에 `CLASS_NOT_FOUND`를 반환한다.
-찜이 이미 취소된 수업이거나 찜이 안된 수업은 `JJIM_NOT_FOUND`를 반환한다.
-```json
-  {
-    "success": true,
-    "status": "JJIM_REMOVED"
   }
 ```

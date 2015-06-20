@@ -188,7 +188,7 @@ void setup() {
 		}
 	});
 
-	app.get("/me/jjim/*", new NNActivityHandler(){
+	app.get("/me/jjim/other/*", new NNActivityHandler(){
 		NNRestActivity activity;
 		ArrayList params;
 		NNArray sharedClasses = new NNArray();
@@ -257,7 +257,7 @@ void setup() {
 		}
 	});
 
-	app.post("/me/jjim", new NNActivityHandler(){
+	app.get("/me/jjim/*", new NNActivityHandler(){
 		NNRestActivity activity;
 		ArrayList params;
 
@@ -265,7 +265,53 @@ void setup() {
 		public void onActivity (NNRestActivity activity, ArrayList params) {
 			this.activity = activity;
 			this.params = params;
-			String targetClassCode = activity.request.body.key("class").stringValue();
+			String targetClassCode = (String)params.get(0);
+			String query = ":code == '" + targetClassCode + "'";
+			NNRow targetClassRow = db.table("class").findOne(query);
+			if(targetClassRow == null){
+				this.classNotFound();
+				return;
+			}
+			NNDictionary targetClass = new NNDictionary();
+			targetClass.withRow(targetClassRow);
+			this.classFound(targetClass);
+		}
+
+		private void classNotFound () {
+			NNDictionary output = new NNDictionary();
+			output.key("success").set(false);
+			output.key("status").set("CLASS_NOT_FOUND");
+			this.activity.response.json(output);
+			this.activity.quit();
+		}
+
+		private void classFound (NNDictionary targetClass) {
+			int targetClassId = targetClass.key("id").integerValue();
+			int targetUserId = this.activity.storage.key("userId").integerValue();
+			String query = ":user == " + targetUserId + " && :class == " + targetClassId;
+			NNRow found = db.table("jjim").findOne(query);
+			this.searchResult(found != null);
+		}
+
+		private void searchResult (boolean found) {
+			NNDictionary output = new NNDictionary();
+			output.key("success").set(true);
+			output.key("status").set("OK");
+			output.key("jjimed").set(found);
+			this.activity.response.json(output);
+			this.activity.quit();
+		}
+	});
+
+	app.post("/me/jjim/*", new NNActivityHandler(){
+		NNRestActivity activity;
+		ArrayList params;
+
+		@Override
+		public void onActivity (NNRestActivity activity, ArrayList params) {
+			this.activity = activity;
+			this.params = params;
+			String targetClassCode = (String)params.get(0);
 			String query = ":code == '" + targetClassCode + "'";
 			NNRow targetClassRow = db.table("class").findOne(query);
 			if(targetClassRow == null){

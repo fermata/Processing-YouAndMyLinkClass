@@ -103,6 +103,7 @@ class NNRestServer {
 			return;
 		} catch (Exception e) {
 			activity.response.internalError();
+			activity.quit();
 			e.printStackTrace();
 			return;
 		}
@@ -242,8 +243,13 @@ class NNRestActivity {
 	public NNRestActivity (Server server, Client client) {
 		this.server = server;
 		this.client = client;
-		this.request = new NNRestRequest(client.readString());
 		this.response = new NNRestResponse(client);
+		try {
+			this.request = new NNRestRequest(client.readString());
+		} catch (Exception e) {
+			this.response.internalError();
+			this.quit();
+		}
 		this.next = true;
 		this.storage = new NNDictionary();
 	}
@@ -254,6 +260,7 @@ class NNRestActivity {
 
 	public void quit () {
 		this.next = false;
+		this.client.stop();
 	}
 
 	public boolean shouldStart () {
@@ -271,7 +278,7 @@ class NNRestRequest {
 	public HashMap<String, String> getParams; // get 인자가 들어감
 	public NNDictionary body; // body 인자가 들어감
 
-	public NNRestRequest (String requestHeaders) {
+	public NNRestRequest (String requestHeaders) throws Exception {
 		this.body = new NNDictionary();
 		String[] lines = requestHeaders.split("\n");
 		println(lines[0]);

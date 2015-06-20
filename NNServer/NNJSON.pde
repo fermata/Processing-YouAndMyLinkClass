@@ -166,6 +166,13 @@ class NNDictionary {
 	}
 
 	/**
+	 * 원소의 갯수를 반환한다.
+	 */
+	public int size () {
+		return this.dataList.size() / 2;
+	}
+
+	/**
 	 * 자신(NNDictionary)를 JSON 형태로 직렬화한다. 하위 객체도 모두 JSON으로 직렬화 된다.
 	 * @return String JSON 문자열
 	 */
