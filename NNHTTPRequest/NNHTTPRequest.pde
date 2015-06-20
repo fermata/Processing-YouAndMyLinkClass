@@ -2,42 +2,11 @@ import java.net.*;
 import java.io.*;
 
 class NNAPI {
-	private String serverDomain;
-	private String prefix;
-	private int port;
-	private PApplet parentApplet;
 	private String baseURL;
 	public String accessToken;
-	
-	public void setBaseURL (String baseURL) {
+
+	public NNAPI (String baseURL) {
 		this.baseURL = baseURL;
-		String[] baseURLComponents = baseURL.split("/");
-		String[] connectionParts = baseURLComponents[2].split(":");
-		if(connectionParts.length > 1){
-			this.serverDomain = connectionParts[0];
-			this.port = Integer.valueOf(connectionParts[1]);
-		}else{
-			this.serverDomain = connectionParts[0];
-			this.port = 80;
-		}
-		this.prefix = "";
-		if(baseURLComponents.length > 3){
-			for(int i = 3; i < baseURLComponents.length; i++){
-				this.prefix += "/" + baseURLComponents[i];
-			}
-		}
-	}
-
-	public NNAPI (PApplet parent) {
-		this.serverDomain = "localhost";
-		this.port = 8080;
-		this.prefix = "";
-		this.parentApplet = parent;
-	}
-
-	public NNAPI (PApplet parent, String baseURL) {
-		this.parentApplet = parent;
-		this.setBaseURL(baseURL);
 	}
 
 	private String encodeURL (String plain) {
