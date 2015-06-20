@@ -32,7 +32,7 @@ HTTP요청을 GET 방식으로 처리한다.
 HTTP요청을 POST 방식으로 처리한다. 단, 전달 값이 없다.
 - __반환형__ : JSONObject
 ```java
-  JSONObject result = api.post("/me/");
+  JSONObject result = api.post("/me/jjim/0321");
   println("응답:" + result.getString("status"));
 ```
 
@@ -48,11 +48,11 @@ HTTP요청을 POST 방식으로 처리한다. `NNDictionary`객체로 서버에 
   api.accessToken = result.getString("access_token");
 ```
 
-### .__post__(String _API주소_)
-HTTP요청을 POST 방식으로 처리한다. 단, 전달 값이 없다.
+### .__delete__(String _API주소_)
+HTTP요청을 DELETE 방식으로 처리한다.
 - __반환형__ : JSONObject
 ```java
-  JSONObject result = api.post("/class");
+  JSONObject result = api.delete("/me/jjim/0321");
   println("응답:" + result.getString("status"));
 ```
 
