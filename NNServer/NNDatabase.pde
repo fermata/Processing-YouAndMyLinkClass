@@ -139,6 +139,10 @@ class NNRow {
 		this.setColumn(column, new NNValue(value));
 	}
 
+	public void setColumn (String column, int value) {
+		this.setColumn(column, new NNValue("" + value));
+	}
+
 	public NNRow set (String column, String value) {
 		this.setColumn(column, value);
 		return this;
@@ -345,6 +349,9 @@ class NNTable {
 		int rEnd = this.length();
 		for(int r = 0; r < rEnd; r++){
 			String test = condition + "";
+			for(int c = 0; c < this.schema.count; c++){
+				test = test.replaceAll(":" + this.schema.dataNames[c] , "'" + this.get(r, c).stringValue() + "'");
+			}
 			try{
 				String testValue =  js.eval(test).toString();
 				if(testValue.equals("true")){
@@ -362,9 +369,9 @@ class NNTable {
 
 	/**
 	 * 메모리에 들어있는 데이터를 .data 파일에 저장한다.
-	 * insert, remove를 실행이후 파일에 바로 반영되는 것이 아니므로 save()를 통해 저장할 수 있다.
+	 * insert, remove를 실행이후 파일에 바로 반영되는 것이 아니므로 commit()을 통해 저장할 수 있다.
 	 */
-	public void save () {
+	public void commit () {
 		int rEnd = this.length();
 		String[] result = new String[rEnd];
 		for(int r = 0; r < rEnd; r++){

@@ -68,7 +68,7 @@ void setup() {
 			row.setColumn("username", body.key("username").stringValue());
 			row.setColumn("password", sha256(body.key("password").stringValue()));
 			db.table("users").insert(row);
-			db.table("users").save();
+			db.table("users").commit();
 			NNDictionary output = new NNDictionary();
 			output.key("success").set(true);
 			output.key("status").set("USER_ADDED");
@@ -252,6 +252,127 @@ void setup() {
 			output.key("success").set(true);
 			output.key("status").set("OK");
 			output.key("classes").set(this.sharedClasses);
+			this.activity.response.json(output);
+			this.activity.quit();
+		}
+	});
+
+	app.post("/me/jjim", new NNActivityHandler(){
+		NNRestActivity activity;
+		ArrayList params;
+
+		@Override
+		public void onActivity (NNRestActivity activity, ArrayList params) {
+			this.activity = activity;
+			this.params = params;
+			String targetClassCode = activity.request.body.key("class").stringValue();
+			String query = ":code == '" + targetClassCode + "'";
+			NNRow targetClassRow = db.table("class").findOne(query);
+			if(targetClassRow == null){
+				this.classNotFound();
+				return;
+			}
+			NNDictionary targetClass = new NNDictionary();
+			targetClass.withRow(targetClassRow);
+			this.classFound(targetClass);
+		}
+
+		private void classNotFound () {
+			NNDictionary output = new NNDictionary();
+			output.key("success").set(false);
+			output.key("status").set("CLASS_NOT_FOUND");
+			this.activity.response.json(output);
+			this.activity.quit();
+		}
+
+		private void classFound (NNDictionary targetClass) {
+			int targetClassId = targetClass.key("id").integerValue();
+			int targetUserId = this.activity.storage.key("userId").integerValue();
+			String query = ":user == " + targetUserId + " && :class == " + targetClassId;
+			NNRow duplicate = db.table("jjim").findOne(query);
+			if(duplicate == null){
+				this.addJjim(targetUserId, targetClassId);
+			}else{
+				this.duplicateFound();
+			}
+		}
+
+		private void duplicateFound () {
+			NNDictionary output = new NNDictionary();
+			output.key("success").set(false);
+			output.key("status").set("ALREADY_ADDED_TO_JJIMS");
+			this.activity.response.json(output);
+			this.activity.quit();
+		}
+
+		private void addJjim (int targetUserId, int targetClassId) {
+			NNRow jjimRow = new NNRow(db.table("jjim").schema());
+			jjimRow.setColumn("user", targetUserId);
+			jjimRow.setColumn("class", targetClassId);
+			db.table("jjim").insert(jjimRow);
+			db.table("jjim").commit();
+			NNDictionary output = new NNDictionary();
+			output.key("success").set(true);
+			output.key("status").set("JJIM_ADDED");
+			this.activity.response.json(output);
+			this.activity.quit();
+		}
+	});
+
+	app.delete("/me/jjim/*", new NNActivityHandler(){
+		NNRestActivity activity;
+		ArrayList params;
+
+		@Override
+		public void onActivity (NNRestActivity activity, ArrayList params) {
+			this.activity = activity;
+			this.params = params;
+			String targetClassCode = (String)params.get(0);
+			String query = ":code == '" + targetClassCode + "'";
+			NNRow targetClassRow = db.table("class").findOne(query);
+			if(targetClassRow == null){
+				this.classNotFound();
+				return;
+			}
+			NNDictionary targetClass = new NNDictionary();
+			targetClass.withRow(targetClassRow);
+			this.classFound(targetClass);
+		}
+
+		private void classNotFound () {
+			NNDictionary output = new NNDictionary();
+			output.key("success").set(false);
+			output.key("status").set("CLASS_NOT_FOUND");
+			this.activity.response.json(output);
+			this.activity.quit();
+		}
+
+		private void classFound (NNDictionary targetClass) {
+			int targetClassId = targetClass.key("id").integerValue();
+			int targetUserId = this.activity.storage.key("userId").integerValue();
+			String query = ":user == " + targetUserId + " && :class == " + targetClassId;
+			NNRow duplicate = db.table("jjim").findOne(query);
+			if(duplicate == null){
+				this.jjimNotFound();
+			}else{
+				this.jjimFound(duplicate.column("id").integerValue());
+			}
+		}
+
+		private void jjimNotFound () {
+			NNDictionary output = new NNDictionary();
+			output.key("success").set(false);
+			output.key("status").set("JJIM_NOT_FOUND");
+			this.activity.response.json(output);
+			this.activity.quit();
+		}
+
+		private void jjimFound (int targetJjimId) {
+			db.table("jjim").removeOne(":id == " + targetJjimId);
+			db.table("jjim").commit();
+			NNDictionary output = new NNDictionary();
+			output.key("success").set(true);
+			output.key("status").set("JJIM_REMOVED");
 			this.activity.response.json(output);
 			this.activity.quit();
 		}

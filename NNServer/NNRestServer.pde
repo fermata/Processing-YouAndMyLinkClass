@@ -60,6 +60,7 @@ class NNRestServer {
 		this.handlersBegins = new NNURLBeginsHandlerList();
 		this.handlersGet = new NNURLHandlerList();
 		this.handlersPost = new NNURLHandlerList();
+		this.handlersDelete = new NNURLHandlerList();
 	}
 
 	/**
@@ -102,6 +103,7 @@ class NNRestServer {
 			return;
 		} catch (Exception e) {
 			activity.response.internalError();
+			e.printStackTrace();
 			return;
 		}
 	}
@@ -266,8 +268,8 @@ class NNRestActivity {
 class NNRestRequest {
 	public String method;
 	public String path;
-	public HashMap<String, String> getParams;
-	public NNDictionary body;
+	public HashMap<String, String> getParams; // get 인자가 들어감
+	public NNDictionary body; // body 인자가 들어감
 
 	public NNRestRequest (String requestHeaders) {
 		this.body = new NNDictionary();
