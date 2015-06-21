@@ -69,11 +69,11 @@ class NNAPI {
 
 	public JSONObject get (String url) {
 		String method = "GET";
-		return this.jsonRequest(method, url, "");
+		return loadJSONObject(this.baseURL + url + "?access_token=" + this.accessToken);
 	}
 
-	public JSONObject remove (String url) {
-		String method = "REMOVE";
+	public JSONObject delete (String url) {
+		String method = "DELETE";
 		return this.jsonRequest(method, url, "");
 	}
 

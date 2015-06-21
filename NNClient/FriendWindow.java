@@ -45,11 +45,11 @@ public class FriendWindow extends JFrame
   public void showWindow()
   {
     setTitle("너와 나의 연결강의");
-      setSize(320, 548);
-      setLayout(null);
+    setSize(320, 548);
+    setLayout(null);
     setVisible(true);
     setResizable(false);
-    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    //setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
   }
 }
 
