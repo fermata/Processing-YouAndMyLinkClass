@@ -6,12 +6,17 @@ import java.awt.event.ActionListener;
 class LoginWindow extends JFrame
 {
   public JLabel title ;
+    /* title input */
   public JLabel id;
   public JLabel pw;
   public JTextField idField;
+    /* ID input */
   public JPasswordField passwordField;
+    /* PW input */
   public JButton loginButton;
+    /* click => SearchWindow */
   public JButton joinButton;
+    /* click => JoinWindow */
     
   public LoginWindow(ActionListener buttonListener)
   {

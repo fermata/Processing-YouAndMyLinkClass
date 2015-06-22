@@ -10,10 +10,15 @@ public class SearchWindow extends JFrame
   public JLabel nm;
   public JLabel title2;
   public JTextField codeSearchField;
+    /* code input */
   public JTextField nameSearchField;
+    /* name input */
   public JButton codeSearchButton;
+    /* click => InfoWindow */
   public JButton nameSearchButton;
+    /* click => FriendWindow */
   public JButton[] jjimButton;
+    /* my list appears */
   
   //cd = code, nm = name, title2 = my jjim
   
