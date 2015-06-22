@@ -7,27 +7,27 @@
 \f0\fs24 \cf0 LoginWindow 
 \f1 \
 => JFrame => JLabel : title / ID / PW\
-		=> JTextField : id \'c0\'d4\'b7\'c2\'c4\'ad / pw \'c0\'d4\'b7\'c2\'c4\'ad\
+		=> JTextField : id input / pw input\
 		=> JButton : Login / Join \
 	\
 \
-		Login Click => SearchWindow\
+		ID,PW input => Login Click => SearchWindow\
 		Join Click => JoinWindow\
 \
 SearchWindow \
 => JFrame => JLabel : title / code / name / title2(My JJIM)\
-		=> JTextField : \'b0\'ad\'c0\'c7code \'c0\'d4\'b7\'c2\'c4\'ad / \'c0\'cc\'b8\'a7 \'c0\'d4\'b7\'c2\'c4\'ad\
+		=> JTextField : class code input / name input\
 		=> JButton : CodeSearch / NameSearch\
-		=> JButton[] : \'b3\'bb \'c2\'f2 \'b8\'f1\'b7\'cf\
+		=> JButton[] : my jjim list\
 \
 		\
-		CodeSearch Click => InfoWindow\
-		NameSearch Click => FriendWindow\
-\
+		Code input => CodeSearch Click => InfoWindow\
+		Name input => NameSearch Click => FriendWindow\
+		my jjim list => my list appears\
 \
 JoinWindow\
 =>  JFrame => JLable : title / ID / PW \
-		=> JTextField : id\'c0\'d4\'b7\'c2\'c4\'ad / pw\'c0\'d4\'b7\'c2\'c4\'ad\
+		=> JTextField : id input / pw input\
 		=> JButton : join / cancel\
 \
 \
@@ -35,10 +35,16 @@ InfoWindow \
 => JFrame => JLabel : title / CodeLabel / LecLabel / CodeName / ProfName\
 		=> JButton : JJIM / UNJJIM \
 \
+		CodeLabel => CodeName appears\
+		ProfLabel => Professor appears\
+		JJIM Click => add to list\
+		\
 \
-		JJIM Click => \'b8\'f1\'b7\'cf\'c3\'df\'b0\'a1\
-		UNJJIM Click => \
 \
+FriendWindow\
+=> JFrame => JLabel : title / FriendName / Similarity \
+		=> JButton[] : JJIM list\
 \
-\
-}
+		SimilarityLabel => similarity with friend appears\
+		JJIM list => list appears\
+		}
