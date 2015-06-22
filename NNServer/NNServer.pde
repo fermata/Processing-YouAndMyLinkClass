@@ -175,7 +175,7 @@ void setup() {
 			output.key("jjims").set(jjims);
 			for(int i = 0; i < jjimList.size(); i++){
 				NNDictionary jjimRow = jjimList.get(i).dictionaryValue();
-				String query2 = ":id == " + jjimRow.key("id").integerValue();
+				String query2 = ":id == " + jjimRow.key("class").integerValue();
 				NNDictionary classInfo = new NNDictionary();
 				classInfo.withRow(db.table("class").findOne(query2));
 				jjims.add().set(classInfo);
@@ -186,7 +186,6 @@ void setup() {
 	});
 
 	app.get("/me/jjim/other/*", new NNActivityHandler(){
-
 		@Override
 		public void onActivity (NNRestActivity activity, ArrayList params) {
 			String otherUserQuery = ":username == '" + params.get(0) + "'";

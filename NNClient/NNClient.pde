@@ -1,3 +1,4 @@
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
@@ -139,6 +140,9 @@ public final SearchWindow searchWindow = new SearchWindow(new ActionListener(){
 					JSONObject suup = classes.getJSONObject(i);
 					if(suup.getBoolean("common")) {
 						commons++;
+						friendWindow.jjimButton[i].setForeground(Color.RED);
+					}else{
+						friendWindow.jjimButton[i].setForeground(Color.BLACK);
 					}
 					friendWindow.jjimButton[i].setText(suup.getString("code"));
 				}  
@@ -146,8 +150,8 @@ public final SearchWindow searchWindow = new SearchWindow(new ActionListener(){
 					friendWindow.jjimButton[i].setText("");
 				}
 				int percentage = commons != 0 ? (int)(((float)commons / (float)classes.size()) * 100) : 0;
-				friendWindow.similarityLabel.setText(percentage + "%");
-				friendWindow.friendNameLabel.setText(searchWindow.nameSearchField.getText());
+				friendWindow.similarityLabel.setText(searchWindow.nameSearchField.getText() + "님의 수업은 나의 수업과 " + percentage + "% 일치합니다.");
+				friendWindow.friendNameLabel.setText(searchWindow.nameSearchField.getText() + "님의 찜 수업 목록입니다.");
 
 
 			}

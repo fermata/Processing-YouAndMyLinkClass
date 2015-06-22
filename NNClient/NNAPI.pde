@@ -51,7 +51,6 @@ class NNAPI {
 			private int iteration = 0;
 
 			public void iterate (String key, NNDynamicValue value) {
-				println(this.iteration);
 				queryStrings[this.iteration] = key + "=" + api.encodeURL(value.stringValue());
 				this.iteration++;
 			}

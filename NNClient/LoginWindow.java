@@ -9,7 +9,7 @@ class LoginWindow extends JFrame
   public JLabel id;
   public JLabel pw;
   public JTextField idField;
-  public JTextField passwordField;
+  public JPasswordField passwordField;
   public JButton loginButton;
   public JButton joinButton;
     
@@ -34,7 +34,7 @@ class LoginWindow extends JFrame
       contentPane.add(pw);
       pw.setBounds(33, 254, 67, 41);
       
-      passwordField = new JTextField();
+      passwordField = new JPasswordField();
       contentPane.add(passwordField);
       passwordField.setBounds(121, 252, 167, 44);
       
