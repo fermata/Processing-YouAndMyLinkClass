@@ -9,9 +9,13 @@ public class InfoWindow extends JFrame
   public JLabel cd;
   public JLabel lec;
   public JLabel codeLabel;
+    /* code name appears */
   public JLabel classNameLabel;
+    /* class name appears */
   public JLabel profNameLabel;
+    /* Professor name appears */
   public JButton jjimButton;
+    /* click => add to list */
   public JButton unjjimButton;
   
   //cd = code, lec = class name
