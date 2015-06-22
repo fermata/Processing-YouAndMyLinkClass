@@ -34,13 +34,7 @@ private boolean updateJJimList () {
 public final FriendWindow friendWindow = new FriendWindow(new ActionListener() {
 	@Override
 	public void actionPerformed (ActionEvent e) {
-<<<<<<< Updated upstream
 		
-=======
-		/*if(e.getSource() == friendWindow.jjimButton[0]){
-
-		} */
->>>>>>> Stashed changes
 	}
 });
 
