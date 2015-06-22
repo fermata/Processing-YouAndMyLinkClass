@@ -19,6 +19,8 @@ public class JoinWindow extends JFrame
       contentPane.setBackground(Color.CYAN);
       
       title = new JLabel("너와 나의 연결강의");
+      title.setHorizontalAlignment(SwingConstants.CENTER);
+      title.setFont(title.getFont().deriveFont(20.0f));
       contentPane.add(title);
       title.setBounds(33, 61, 255, 44);
       

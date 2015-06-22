@@ -21,11 +21,13 @@ public class InfoWindow extends JFrame
     Container contentPane = getContentPane();
       contentPane.setBackground(Color.CYAN);
       
-    title = new JLabel("너와 나의 연결강의");
+      title = new JLabel("너와 나의 연결강의");
+      title.setHorizontalAlignment(SwingConstants.CENTER);
+      title.setFont(title.getFont().deriveFont(20.0f));
       contentPane.add(title);
       title.setBounds(33, 61, 255, 44);
     
-      cd = new JLabel("CODE : ");
+      cd = new JLabel("수업코드 : ");
       contentPane.add(cd);
       cd.setBounds(33, 145, 67, 41);
       
@@ -33,7 +35,7 @@ public class InfoWindow extends JFrame
       contentPane.add(codeLabel);
       codeLabel.setBounds(108, 145, 180, 44);
       
-      lec = new JLabel("CLASSNAME : ");
+      lec = new JLabel("수업이름 : ");
       contentPane.add(lec);
       lec.setBounds(33, 219, 67, 41);
       
@@ -45,12 +47,12 @@ public class InfoWindow extends JFrame
       contentPane.add(profNameLabel);
       profNameLabel.setBounds(108, 270, 180, 44);
       
-      jjimButton = new JButton("JJIM");
+      jjimButton = new JButton("찜하기");
       contentPane.add(jjimButton);
       jjimButton.setBounds(74, 338, 172, 55);
       jjimButton.addActionListener(buttonListener);
       
-      unjjimButton = new JButton("UNJJIM");
+      unjjimButton = new JButton("찜 취소");
       contentPane.add(unjjimButton);
       unjjimButton.setBounds(74, 410, 172, 55);
       unjjimButton.addActionListener(buttonListener); 

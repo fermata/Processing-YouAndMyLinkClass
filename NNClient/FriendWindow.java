@@ -15,15 +15,21 @@ public class FriendWindow extends JFrame
     Container contentPane = getContentPane();
       contentPane.setBackground(Color.CYAN);
       
-    title = new JLabel("너와 나의 연결강의");
+      title = new JLabel("너와 나의 연결강의");
+      title.setHorizontalAlignment(SwingConstants.CENTER);
+      title.setFont(title.getFont().deriveFont(20.0f));
       contentPane.add(title);
       title.setBounds(33, 61, 255, 44);
       
       friendNameLabel = new JLabel();
+      friendNameLabel.setHorizontalAlignment(SwingConstants.CENTER);
+      friendNameLabel.setFont(friendNameLabel.getFont().deriveFont(16.0f));
       contentPane.add(friendNameLabel);
       friendNameLabel.setBounds(74, 140, 173,45);
       
       similarityLabel = new JLabel();
+      similarityLabel.setHorizontalAlignment(SwingConstants.CENTER);
+      similarityLabel.setFont(similarityLabel.getFont().deriveFont(14.0f));
       contentPane.add(similarityLabel);
       similarityLabel.setBounds(47, 262, 227, 58);
       

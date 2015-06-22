@@ -22,11 +22,13 @@ public class SearchWindow extends JFrame
     Container contentPane = getContentPane();
       contentPane.setBackground(Color.CYAN);
       
-    title = new JLabel("너와 나의 연결강의");
+      title = new JLabel("너와 나의 연결강의");
+      title.setHorizontalAlignment(SwingConstants.CENTER);
+      title.setFont(title.getFont().deriveFont(20.0f));
       contentPane.add(title);
       title.setBounds(33, 61, 255, 44);
       
-      cd = new JLabel("CODE : ");
+      cd = new JLabel("수업코드 : ");
       contentPane.add(cd);
       cd.setBounds(12, 140, 67, 41);
       
@@ -34,7 +36,7 @@ public class SearchWindow extends JFrame
       contentPane.add(codeSearchField);
       codeSearchField.setBounds(87, 140, 106, 44);
       
-      nm = new JLabel("NAME : ");
+      nm = new JLabel("친구아이디 : ");
       contentPane.add(nm);
       nm.setBounds(12, 219, 67, 41);
       
@@ -42,16 +44,18 @@ public class SearchWindow extends JFrame
       contentPane.add(nameSearchField);
       nameSearchField.setBounds(87, 219, 106, 44);
       
-      title2 = new JLabel("MY JJIM");
+      title2 = new JLabel("내 찜 목록");
+      title2.setHorizontalAlignment(SwingConstants.CENTER);
+      title2.setFont(title2.getFont().deriveFont(20.0f));
       contentPane.add(title2);
       title2.setBounds(85,295, 136, 52);
       
-      codeSearchButton = new JButton("SEARCH");
+      codeSearchButton = new JButton("검색");
       contentPane.add(codeSearchButton);
       codeSearchButton.setBounds(201, 140, 107, 44);
       codeSearchButton.addActionListener(buttonListener);
       
-      nameSearchButton = new JButton("SEARCH");
+      nameSearchButton = new JButton("검색");
       contentPane.add(nameSearchButton);
       nameSearchButton.setBounds(201, 219, 107, 44);
       nameSearchButton.addActionListener(buttonListener);
@@ -59,7 +63,7 @@ public class SearchWindow extends JFrame
     jjimButton  = new JButton[6];
     for(int i=0; i<jjimButton.length; i++)
       {
-      jjimButton[i] = new JButton("jjim "+(i+1));
+      jjimButton[i] = new JButton("찜 "+(i+1));
       contentPane.add(jjimButton[i]);
       jjimButton[i].addActionListener(buttonListener);
       }
