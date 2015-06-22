@@ -7,8 +7,11 @@ public class FriendWindow extends JFrame
 {
   public JLabel title ;
   public JLabel friendNameLabel;
+    /* one's name */
   public JLabel similarityLabel;
+    /* x % appears */
   public JButton[] jjimButton;
+    /* list appears */
   
   public FriendWindow(ActionListener buttonListener)
   {
