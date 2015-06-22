@@ -9,7 +9,9 @@ public class JoinWindow extends JFrame
   public JLabel id;
   public JLabel pw;
   public JTextField idField;
-  public JTextField passwordField;;
+    /* id input */
+  public JTextField passwordField;
+    /* pw input */
   public JButton joinButton;
   public JButton cancelButton;
   
