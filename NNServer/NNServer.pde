@@ -22,7 +22,7 @@ int decodeAccessToken (String accessToken) {
 			return -1;
 		}
 	} catch (Exception e) {
-		e.printStackTrace();
+		//e.printStackTrace();
 		return -1;
 	}
 }

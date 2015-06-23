@@ -68,7 +68,7 @@ class NNAPI {
 
 	public JSONObject get (String url) {
 		String method = "GET";
-		return loadJSONObject(this.baseURL + url + "?access_token=" + this.accessToken);
+		return loadJSONObject(this.baseURL + url + (this.accessToken != null ? "?access_token=" + this.accessToken : ""));
 	}
 
 	public JSONObject delete (String url) {
@@ -77,7 +77,7 @@ class NNAPI {
 	}
 
 	private JSONObject jsonRequest (String method, String url, String body) {
-		url += "?access_token=" + this.accessToken;
+		url += this.accessToken != null ? "?access_token=" + this.accessToken : "";
 		if(body.equals("")){
 			try{
 				URL requestURL = new URL(this.baseURL + url);

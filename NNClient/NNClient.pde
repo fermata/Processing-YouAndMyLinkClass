@@ -34,7 +34,7 @@ private boolean updateJJimList () {
 public final FriendWindow friendWindow = new FriendWindow(new ActionListener() {
 	@Override
 	public void actionPerformed (ActionEvent e) {
-		
+
 	}
 });
 
@@ -150,8 +150,8 @@ public final SearchWindow searchWindow = new SearchWindow(new ActionListener(){
 					friendWindow.jjimButton[i].setText("");
 				}
 				int percentage = commons != 0 ? (int)(((float)commons / (float)classes.size()) * 100) : 0;
-				friendWindow.similarityLabel.setText(searchWindow.nameSearchField.getText() + "님의 수업은 나의 수업과 " + percentage + "% 일치합니다.");
-				friendWindow.friendNameLabel.setText(searchWindow.nameSearchField.getText() + "님의 찜 수업 목록입니다.");
+				friendWindow.similarityLabel.setText(searchWindow.nameSearchField.getText() + "님과 " + percentage + "% 일치");
+				friendWindow.friendNameLabel.setText(searchWindow.nameSearchField.getText() + "님의 찜 수업");
 
 
 			}

@@ -15,7 +15,7 @@ String sha256 (String message) {
 		}
 		return sb.toString();
 	} catch (Exception e) {
-		e.printStackTrace();
+		//e.printStackTrace();
 		return null;
 	}
 }
@@ -27,7 +27,7 @@ String decodeURL (String input) {
 	try {
 		return new String(input.getBytes("UTF-8"), "ASCII");
 	} catch (Exception e) {
-		e.printStackTrace();
+		//e.printStackTrace();
 	}
 	return null;
 }
@@ -104,7 +104,7 @@ class NNRestServer {
 		} catch (Exception e) {
 			activity.response.internalError();
 			activity.quit();
-			e.printStackTrace();
+			//e.printStackTrace();
 			return;
 		}
 	}
@@ -387,15 +387,17 @@ class NNRestResponse {
 	}
 
 	public void writeLine (String content) {
-		this.client.write(content + "\r\n");
+		this.write(content + "\r\n");
 	}
 
 	public void writeBody (String content) {
-		this.client.write("\r\n" + content);
+		this.write("\r\n" + content);
 	}
 
 	public void end () {
-		this.client.write(this.buffer.toString());
-		this.client.stop();
+		if(this.client != null){
+			this.client.write(this.buffer.toString());
+			this.client.stop();
+		}
 	}
 }

@@ -280,7 +280,7 @@ class NNTable {
 					result.add(new NNRow(this.schema, this.row(r)));
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				//e.printStackTrace();
 			}
 		}
 		return result;
@@ -303,7 +303,7 @@ class NNTable {
 					return new NNRow(this.schema, this.row(r));
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				//e.printStackTrace();
 			}
 		}
 		return null;
@@ -337,7 +337,7 @@ class NNTable {
 					}
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				//e.printStackTrace();
 			}
 		}
 	}
@@ -362,7 +362,7 @@ class NNTable {
 					return;
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				//e.printStackTrace();
 			}
 		}
 	}
